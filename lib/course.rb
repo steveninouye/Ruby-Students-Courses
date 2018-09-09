@@ -1,21 +1,3 @@
-# Students and Courses
-
-# Write a set of classes to model `Student`s and `Course`s.
-
-# ## Instructions
-# 1. Run `bundle install` in the root directory of the project.
-# 2. Run the specs one at a time in this order:
-
-# ```bash
-# bundle exec rspec spec/student_spec.rb
-# bundle exec rspec spec/course_spec.rb
-# bundle exec rspec spec/extension_spec.rb
-# ```
-
-# When you are finished with the extras, comment in line 7 in the
-# `spec/course_spec.rb` file and run all of the specs at once with `bundle
-# exec rspec`. Make sure everything passes!
-
 # ## Course
 # * `Course#initialize` should take the course name, department, and
 #   number of credits.
@@ -37,5 +19,28 @@
 #     * May want to write a `Student#has_conflict?` method to help.
 
 class Course
+    attr_accessor :students, :days, :time_block
+    attr_reader :name, :department, :credits
 
+    def initialize (name, department, credits, days, time_block)
+        @name = name
+        @department = department
+        @credits = credits
+        @students = []
+        @days = days
+        @time_block = time_block
+    end
+
+    def add_student(student)
+        student.enroll(self)
+    end
+
+    def conflicts_with?(course)
+        if course.time_block == @time_block
+            @days.each do |el|
+                return true if course.days.include?(el)
+            end
+        end
+        false
+    end
 end

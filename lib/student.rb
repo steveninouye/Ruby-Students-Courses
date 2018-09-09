@@ -11,6 +11,40 @@
 # * `Student#course_load` should return a hash of departments to # of
 #   credits the student is taking in that department.
 
-class Student
+class Student 
+    attr_accessor :first_name, :last_name, :courses
+
+    def initialize (first_name, last_name)
+        @first_name = first_name
+        @last_name = last_name
+        @courses = []
+    end
+
+    def name
+        "#{@first_name} #{@last_name}"
+    end
+
+    def enroll(course)        
+        return if @courses.include?(course)
+        raise "#{course} conflicts with another course" if has_conflict?(course)
+        @courses << course
+        course.students << self
+    end
+
+    def course_load
+        @courses.reduce(Hash.new(0)) do |acc, obj|
+            acc[obj.department] += obj.credits
+            acc
+        end
+    end
+
+    def has_conflict?(course)
+        @courses.each do |crs|
+            if crs.conflicts_with?(course)
+                return true
+            end
+        end
+        false
+    end
 
 end
